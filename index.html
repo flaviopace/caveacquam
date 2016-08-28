@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="http://openlayers.org/en/v3.17.1/css/ol.css" />
+        <link rel="stylesheet" href="./resources/ol3-layerswitcher.css">
+        <style>
+        html, body {
+            background-color: #ffffff;
+        }
+        </style>
+        <script src="resources/polyfills.js"></script>
+        <script src="http://openlayers.org/en/v3.17.1/build/ol.js"></script>
+        <script src="resources/OSMBuildings-OL3.js"></script>
+        <script src="./resources/ol3-layerswitcher.js"></script>
+        <script src="layers/confinicomunali.js"></script><script src="layers/centrielocalit.js"></script>
+        <script src="styles/confinicomunali_style.js"></script><script src="styles/centrielocalit_style.js"></script>
+        <script src="./layers/layers.js" type="text/javascript"></script> 
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+            <div id="popup" class="ol-popup">
+                <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+                <div id="popup-content"></div>
+            </div>
+        </div>
+    	<div id="markpopup" class="ol-markpopup">
+      		<a href="#" id="markpopup-closer" class="ol-markpopup-closer"></a>
+      		<div id="markpopup-content"></div>
+    	</div>
+        <script src="./resources/cave_aquam.js"></script>
+        <script src="./resources/Autolinker.min.js"></script>
+<style>
+.tooltip {
+  position: relative;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  color: white;
+  padding: 4px 8px;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+.tooltip-measure {
+  opacity: 1;
+  font-weight: bold;
+}
+.tooltip-static {
+  background-color: #ffcc33;
+  color: black;
+  border: 1px solid white;
+}
+.tooltip-measure:before,
+.tooltip-static:before {
+  border-top: 6px solid rgba(0, 0, 0, 0.5);
+  border-right: 6px solid transparent;
+  border-left: 6px solid transparent;
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  margin-left: -7px;
+  left: 50%;
+}
+.tooltip-static:before {
+  border-top-color: #ffcc33;
+}
+.measure-control {
+  top: 65px;
+  left: .5em;
+}
+.ol-touch .measure-control {
+  top: 80px;
+}
+      .ol-markpopup {
+        position: absolute;
+        background-color: white;
+        -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+        filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #cccccc;
+        bottom: 12px;
+        left: -50px;
+        min-width: 280px;
+        display: none;
+      }
+      .ol-markpopup:after, .ol-markpopup:before {
+        top: 100%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+      }
+      .ol-markpopup:after {
+        border-top-color: white;
+        border-width: 10px;
+        left: 48px;
+        margin-left: -10px;
+      }
+      .ol-markpopup:before {
+        border-top-color: #cccccc;
+        border-width: 11px;
+        left: 48px;
+        margin-left: -11px;
+      }
+      .ol-markpopup-closer {
+        text-decoration: none;
+        position: absolute;
+        top: 2px;
+        right: 8px;
+      }
+      .ol-markpopup-closer:after {
+        content: "✖";
+      }
+</style>
+    </body>
+</html>
