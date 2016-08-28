@@ -88,7 +88,7 @@ var map = new ol.Map({
 map.getView().fit([1639475.760638, 4851119.449981, 1948918.696787, 5032911.315568], map.getSize());
 
 var overlayContentPopup = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
-        element: container,
+        element: window.containerMark,
         autoPan: true,
         autoPanAnimation: {
           duration: 250
