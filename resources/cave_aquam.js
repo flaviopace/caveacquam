@@ -297,11 +297,7 @@ var onSingleClick = function(evt) {
         container.style.display = 'block';        
     } else {
     
- 		var view = new ol.View({
-        	center: [15, 40],
-        	zoom: 1
-      	});
-        
+        var view = map.getView(); 
         var viewResolution = /** @type {number} */ (view.getResolution());
         var wmsSource = new ol.source.TileWMS({
         	url: 'http://lrssvt.ns0.it/cgi-bin/qgis_mapserv.fcgi?map=/Library/WebServer/Documents/caveaquam/caveaquam.qgs&',
