@@ -306,18 +306,46 @@ var onSingleClick = function(evt) {
         	//crossOrigin: 'anonymous'
 		});
 	
-        var url = wmsSource.getGetFeatureInfoUrl(
+        var urlPoint = wmsSource.getGetFeatureInfoUrl(
             evt.coordinate, viewResolution, 'EPSG:3857',
             {'INFO_FORMAT': 'text/html'});
         
-        if (url) {
-        	
-          	document.getElementById('markpopup-content').innerHTML =
-              '<iframe seamless src="' + url + '"></iframe>';
-
-      		var coordinate = evt.coordinate;
-            window.overlayContentPopup.setPosition(coordinate);
-            window.containerMark.style.display = 'block';
+        if (urlPoint) {
+        
+        	$.ajax({
+  				type: "POST",
+  				url: "./caveacquam.php",
+  				data: { link : urlPoint},
+  				dataType: "JSON", //tell jQuery to expect JSON encoded response
+  				timeout: 6000,
+  				success: function (response) {
+      				console.log('success');
+      				var obj = response;
+      				console.log(obj.Descrizione)
+      				if (obj.hasOwnProperty('Descrizione'))
+      				{
+      					console.log(obj.Descrizione);
+      					document.getElementById('markpopup-content').innerHTML =
+              				'<iframe id="frameID" src="' + urlPoint + '"></iframe>';  
+              			var coordinate = evt.coordinate;
+            			window.overlayContentPopup.setPosition(coordinate);
+            			window.containerMark.style.display = 'block';
+      				}
+      				else
+      				{
+      					console.log("Coord Not Found");
+      					document.getElementById('markpopup-content').innerHTML =
+              				"Point Not Found";  
+              			var coordinate = evt.coordinate;
+            			window.overlayContentPopup.setPosition(coordinate);
+            			window.containerMark.style.display = 'block';
+      				}
+  				},
+  				error: function(data) {
+  					console.log('Exception:'+data.responseText);
+  				}
+			});
+            
         }
         
     }
