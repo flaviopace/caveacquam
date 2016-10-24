@@ -321,12 +321,40 @@ var onSingleClick = function(evt) {
   				success: function (response) {
       				console.log('success');
       				var obj = response;
-      				console.log(obj.Descrizione)
+      				
       				if (obj.hasOwnProperty('Descrizione'))
       				{
-      					console.log(obj.Descrizione);
-      					document.getElementById('markpopup-content').innerHTML =
+      					//console.log(obj.Descrizione);
+      					var tr= '<table>';
+      					for (var key in obj) {
+  							if (obj.hasOwnProperty(key)) {
+    							console.log(key);
+    							tr += ("<tr>");
+    							tr +=("<td>" + key + "</td>");
+    							var dataCopy = obj[key]
+    								for(value in dataCopy){
+    									console.log(value );
+    									if(key == "Foto")
+    									{
+    										var src = '<img src="'+value +'" alt="Smiley face" height="42" width="42">';
+    										tr +=("<td>" + src + "</td>");
+    									}
+    									else
+    									{
+    										tr +=("<td>" + value + "</td>");
+    									}
+    								}
+  							}
+  							tr += ("</tr>");
+						}
+						
+						tr += '</table>';
+						$("#markpopup-content").html(tr);
+						
+
+      					/*document.getElementById('markpopup-content').innerHTML =
               				'<iframe id="frameID" src="' + urlPoint + '"></iframe>';  
+              				*/
               			var coordinate = evt.coordinate;
             			window.overlayContentPopup.setPosition(coordinate);
             			window.containerMark.style.display = 'block';
