@@ -301,7 +301,7 @@ var onSingleClick = function(evt) {
         var viewResolution = /** @type {number} */ (view.getResolution());
         var wmsSource = new ol.source.TileWMS({
         	url: 'http://lrssvt.ns0.it/cgi-bin/qgis_mapserv.fcgi?map=/Library/WebServer/Documents/caveaquam/caveaquam.qgs&',
-			params: {'LAYERS': 'eventi'},
+			params: {'LAYERS': 'eventi', 'FI_POINT_TOLERANCE':'25'},
 			serverType: 'qgis',
         	//crossOrigin: 'anonymous'
 		});
