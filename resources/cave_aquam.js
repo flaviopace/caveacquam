@@ -82,7 +82,7 @@ var map = new ol.Map({
     overlays: [overlayPopup],
     layers: layersList,
     view: new ol.View({
-        extent: [1639475.760638, 4851119.449981, 1948918.696787, 5032911.315568], maxZoom: 28, minZoom: 1
+        extent: [1639475.760638, 4851119.449981, 1948918.696787, 5032911.315568], maxZoom: 28, minZoom: 8
     })
 });
 map.getView().fit([1639475.760638, 4851119.449981, 1948918.696787, 5032911.315568], map.getSize());
