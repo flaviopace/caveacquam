@@ -263,6 +263,7 @@ var onSingleClick = function(evt) {
         var doPopup = false;
         for (k in layer.get('fieldImages')) {
             if (layer.get('fieldImages')[k] != "Hidden") {
+            if( document.getElementById("confini-comunali_3").checked )
                 doPopup = true;
             }
         }
@@ -274,7 +275,7 @@ var onSingleClick = function(evt) {
                     if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "inline label") {
                         popupField += '<th>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</th><td>';
                     } else {
-                        popupField += '<td colspan="2">';
+                        popupField += '<td bgcolor="#00FF00" colspan="2"> Comune di: ';
                     }
                     if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "header label") {
                         popupField += '<strong>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</strong><br />';
@@ -291,11 +292,9 @@ var onSingleClick = function(evt) {
         }
     });
 
-    if (popupText) {
         overlayPopup.setPosition(coord);
         content.innerHTML = popupText;
         container.style.display = 'block';        
-    } else {
     
         var view = map.getView(); 
         var viewResolution = /** @type {number} */ (view.getResolution());
@@ -376,7 +375,6 @@ var onSingleClick = function(evt) {
             
         }
         
-    }
 };
 
 
