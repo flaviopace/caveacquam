@@ -82,7 +82,7 @@ var map = new ol.Map({
     overlays: [overlayPopup],
     layers: layersList,
     view: new ol.View({
-        extent: [1639475.760638, 4851119.449981, 1948918.696787, 5032911.315568], maxZoom: 28, minZoom: 1
+        extent: [1639475.760638, 4851119.449981, 1948918.696787, 5032911.315568], maxZoom: 28, minZoom: 9
     })
 });
 map.getView().fit([1639475.760638, 4851119.449981, 1948918.696787, 5032911.315568], map.getSize());
@@ -301,23 +301,79 @@ var onSingleClick = function(evt) {
         var viewResolution = /** @type {number} */ (view.getResolution());
         var wmsSource = new ol.source.TileWMS({
         	url: 'http://lrssvt.ns0.it/cgi-bin/qgis_mapserv.fcgi?map=/Library/WebServer/Documents/caveaquam/caveaquam.qgs&',
-			params: {'LAYERS': 'eventi'},
+			params: {'LAYERS': 'eventi', 'FI_POINT_TOLERANCE':'25'},
 			serverType: 'qgis',
         	//crossOrigin: 'anonymous'
 		});
 	
-        var url = wmsSource.getGetFeatureInfoUrl(
+        var urlPoint = wmsSource.getGetFeatureInfoUrl(
             evt.coordinate, viewResolution, 'EPSG:3857',
             {'INFO_FORMAT': 'text/html'});
         
-        if (url) {
-        	
-          	document.getElementById('markpopup-content').innerHTML =
-              '<iframe seamless src="' + url + '"></iframe>';
+        if (urlPoint) {
+        
+        	$.ajax({
+  				type: "POST",
+  				url: "./caveacquam.php",
+  				data: { link : urlPoint},
+  				dataType: "JSON", //tell jQuery to expect JSON encoded response
+  				timeout: 6000,
+  				success: function (response) {
+      				console.log('success');
+      				var obj = response;
+      				
+      				if (obj.hasOwnProperty('Descrizione'))
+      				{
+      					//console.log(obj.Descrizione);
+      					var tr= '<table>';
+      					for (var key in obj) {
+  							if (obj.hasOwnProperty(key)) {
+    							console.log(key);
+    							tr += ("<tr>");
+    							tr +=("<td>" + key + "</td>");
+    							var dataCopy = obj[key]
+    								for(value in dataCopy){
+    									console.log(value );
+    									if(key == "Foto")
+    									{
+    										var src = '<img src="'+value +'" alt="Smiley face" height="42" width="42">';
+    										tr +=("<td>" + src + "</td>");
+    									}
+    									else
+    									{
+    										tr +=("<td>" + value + "</td>");
+    									}
+    								}
+  							}
+  							tr += ("</tr>");
+						}
+						
+						tr += '</table>';
+						$("#markpopup-content").html(tr);
+						
 
-      		var coordinate = evt.coordinate;
-            window.overlayContentPopup.setPosition(coordinate);
-            window.containerMark.style.display = 'block';
+      					/*document.getElementById('markpopup-content').innerHTML =
+              				'<iframe id="frameID" src="' + urlPoint + '"></iframe>';  
+              				*/
+              			var coordinate = evt.coordinate;
+            			window.overlayContentPopup.setPosition(coordinate);
+            			window.containerMark.style.display = 'block';
+      				}
+      				else
+      				{
+      					console.log("Coord Not Found");
+      					document.getElementById('markpopup-content').innerHTML =
+              				"Point Not Found";  
+              			var coordinate = evt.coordinate;
+            			window.overlayContentPopup.setPosition(coordinate);
+            			window.containerMark.style.display = 'block';
+      				}
+  				},
+  				error: function(data) {
+  					console.log('Exception:'+data.responseText);
+  				}
+			});
+            
         }
         
     }
