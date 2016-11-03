@@ -257,6 +257,7 @@ var onSingleClick = function(evt) {
     var popupText = '';
     var currentFeature;
     var currentFeatureKeys;
+    content.innerHTML = "";
     map.forEachFeatureAtPixel(pixel, function(feature, layer) {
         currentFeature = feature;
         currentFeatureKeys = currentFeature.getKeys();
@@ -267,14 +268,24 @@ var onSingleClick = function(evt) {
             }
         }
         if (doPopup) {
-            popupText = '<table>';
+            var prefix = '';
+            popupText += '<table>';
+            console.log(layer.A.name);
+            if(layer.A.name == "style_centrielocalit")
+            {
+            	prefix = "Località ";
+            }
+            else
+            {
+            	prefix = "Comune ";
+            }
             for (var i=0; i<currentFeatureKeys.length; i++) {
                 if (currentFeatureKeys[i] != 'geometry') {
                     popupField = '';
                     if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "inline label") {
                         popupField += '<th>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</th><td>';
                     } else {
-                        popupField += '<td colspan="2">';
+                        popupField += '<td bgcolor="#00FF00" colspan="2">' + prefix + ' di: ';
                     }
                     if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "header label") {
                         popupField += '<strong>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</strong><br />';
@@ -291,92 +302,89 @@ var onSingleClick = function(evt) {
         }
     });
 
-    if (popupText) {
         overlayPopup.setPosition(coord);
-        content.innerHTML = popupText;
+        content.innerHTML += popupText;
         container.style.display = 'block';        
-    } else {
     
         var view = map.getView(); 
         var viewResolution = /** @type {number} */ (view.getResolution());
         var wmsSource = new ol.source.TileWMS({
-        	url: 'http://lrssvt.ns0.it/cgi-bin/qgis_mapserv.fcgi?map=/Library/WebServer/Documents/caveaquam/caveaquam.qgs&',
-			params: {'LAYERS': 'eventi', 'FI_POINT_TOLERANCE':'25'},
-			serverType: 'qgis',
-        	//crossOrigin: 'anonymous'
-		});
-	
+            url: 'http://lrssvt.ns0.it/cgi-bin/qgis_mapserv.fcgi?map=/Library/WebServer/Documents/caveaquam/caveaquam.qgs&',
+            params: {'LAYERS': 'eventi', 'FI_POINT_TOLERANCE':'25'},
+            serverType: 'qgis',
+            //crossOrigin: 'anonymous'
+        });
+    
         var urlPoint = wmsSource.getGetFeatureInfoUrl(
             evt.coordinate, viewResolution, 'EPSG:3857',
             {'INFO_FORMAT': 'text/html'});
         
         if (urlPoint) {
         
-        	$.ajax({
-  				type: "POST",
-  				url: "./caveacquam.php",
-  				data: { link : urlPoint},
-  				dataType: "JSON", //tell jQuery to expect JSON encoded response
-  				timeout: 6000,
-  				success: function (response) {
-      				console.log('success');
-      				var obj = response;
-      				
-      				if (obj.hasOwnProperty('Descrizione'))
-      				{
-      					//console.log(obj.Descrizione);
-      					var tr= '<table>';
-      					for (var key in obj) {
-  							if (obj.hasOwnProperty(key)) {
-    							console.log(key);
-    							tr += ("<tr>");
-    							tr +=("<td>" + key + "</td>");
-    							var dataCopy = obj[key]
-    								for(value in dataCopy){
-    									console.log(value );
-    									if(key == "Foto")
-    									{
-    										var src = '<img src="'+value +'" alt="Smiley face" height="42" width="42">';
-    										tr +=("<td>" + src + "</td>");
-    									}
-    									else
-    									{
-    										tr +=("<td>" + value + "</td>");
-    									}
-    								}
-  							}
-  							tr += ("</tr>");
-						}
-						
-						tr += '</table>';
-						$("#markpopup-content").html(tr);
-						
+            $.ajax({
+                type: "POST",
+                url: "./caveacquam.php",
+                data: { link : urlPoint},
+                dataType: "JSON", //tell jQuery to expect JSON encoded response
+                timeout: 6000,
+                success: function (response) {
+                    console.log('success');
+                    var obj = response;
+                    
+                    if (obj.hasOwnProperty('Descrizione'))
+                    {
+                        //console.log(obj.Descrizione);
+                        var tr= '<table>';
+                        for (var key in obj) {
+                            if (obj.hasOwnProperty(key)) {
+                                console.log(key);
+                                tr += ("<tr>");
+                                tr +=("<td>" + key + "</td>");
+                                var dataCopy = obj[key]
+                                    for(value in dataCopy){
+                                        console.log(value );
+                                        if(key == "Foto")
+                                        {
+                                            var src = '<img src="'+value +'" alt="Smiley face" height="42" width="42">';
+                                            tr +=("<td>" + src + "</td>");
+                                        }
+                                        else
+                                        {
+                                            tr +=("<td>" + value + "</td>");
+                                        }
+                                    }
+                            }
+                            tr += ("</tr>");
+                        }
+                        
+                        tr += '</table>';
+                        $("#markpopup-content").html(tr);
+                        
 
-      					/*document.getElementById('markpopup-content').innerHTML =
-              				'<iframe id="frameID" src="' + urlPoint + '"></iframe>';  
-              				*/
-              			var coordinate = evt.coordinate;
-            			window.overlayContentPopup.setPosition(coordinate);
-            			window.containerMark.style.display = 'block';
-      				}
-      				else
-      				{
-      					console.log("Coord Not Found");
-      					document.getElementById('markpopup-content').innerHTML =
-              				"Point Not Found";  
-              			var coordinate = evt.coordinate;
-            			window.overlayContentPopup.setPosition(coordinate);
-            			window.containerMark.style.display = 'block';
-      				}
-  				},
-  				error: function(data) {
-  					console.log('Exception:'+data.responseText);
-  				}
-			});
+                        /*document.getElementById('markpopup-content').innerHTML =
+                            '<iframe id="frameID" src="' + urlPoint + '"></iframe>';  
+                            */
+                        var coordinate = evt.coordinate;
+                        window.overlayContentPopup.setPosition(coordinate);
+                        window.containerMark.style.display = 'block';
+                    }
+                    else
+                    {
+                        console.log("Coord Not Found");
+                        document.getElementById('markpopup-content').innerHTML =
+                            "Point Not Found";  
+                        var coordinate = evt.coordinate;
+                        window.overlayContentPopup.setPosition(coordinate);
+                        window.containerMark.style.display = 'block';
+                    }
+                },
+                error: function(data) {
+                    console.log('Exception:'+data.responseText);
+                }
+            });
             
         }
         
-    }
 };
 
 
