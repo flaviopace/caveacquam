@@ -247,6 +247,26 @@ var onPointerMove = function(evt) {
     }
 };
 
+ var selectedTextStyleFunction = function(name) {
+    return new ol.style.Style({
+        text: new ol.style.Text({
+            font: 'bold 36px helvetica,sans-serif',
+            text: 'Caricamento In Corso...',
+            textBaseline: 'bottom',
+            textAlign: 'left',
+            fill: new ol.style.Fill({
+                color: '#000'
+            }),
+            stroke: new ol.style.Stroke({
+                color: '#fff',
+                width: 2
+            })
+        })
+    });
+};
+
+var oldStyle;   
+var lastFeature;     
 var onSingleClick = function(evt) {
     if (doHover) {
         return;
@@ -259,8 +279,11 @@ var onSingleClick = function(evt) {
     var currentFeatureKeys;
     content.innerHTML = "";
     map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-        currentFeature = feature;
+        lastFeature = currentFeature = feature;
         currentFeatureKeys = currentFeature.getKeys();
+        oldStyle = feature.getStyle();
+        feature.setStyle (selectedTextStyleFunction());
+        
         var doPopup = false;
         for (k in layer.get('fieldImages')) {
             if (layer.get('fieldImages')[k] != "Hidden") {
@@ -330,7 +353,8 @@ var onSingleClick = function(evt) {
                 success: function (response) {
                     console.log('success');
                     var obj = response;
-                    
+                    //reset style
+                    lastFeature.setStyle(oldStyle);
                     if (obj.hasOwnProperty('Descrizione'))
                     {
                         //console.log(obj.Descrizione);
