@@ -440,11 +440,6 @@ var onSingleClick = function(evt) {
                     else
                     {
                         console.log("Coord Not Found");
-                        document.getElementById('markpopup-content').innerHTML =
-                            "Point Not Found";  
-                        var coordinate = evt.coordinate;
-                        window.overlayContentPopup.setPosition(coordinate);
-                        window.containerMark.style.display = 'block';
                     }
                 },
                 error: function(data) {
