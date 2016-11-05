@@ -38,6 +38,43 @@ var measuring = false;
     };
 ol.inherits(measureControl, ol.control.Control);
 */
+/**
+       * Define a namespace for the application.
+       */
+      window.app = {};
+      var app = window.app;
+/**
+ * @constructor
+ * @extends {ol.control.Control}
+ * @param {Object=} opt_options Control options.
+ */
+app.CustomToolbarControl = function(opt_options) {
+
+    var options = opt_options || {};
+
+    var button = document.createElement('button');
+    button.innerHTML = 'Auto-Zoom';
+
+
+    var element = document.createElement('div');
+    element.className = 'ol-unselectable ol-mycontrol';
+    element.appendChild(button);
+
+    ol.control.Control.call(this, {
+    element: element,
+    target: options.target
+    });
+  
+    var this_ = this;
+    var handleRotateNorth = function(e) {
+        this_.getMap().getView().setZoom( 9);
+
+    };
+
+    button.addEventListener('click', handleRotateNorth, false);
+        
+};
+ol.inherits(app.CustomToolbarControl, ol.control.Control);
 
 var containerMark = document.getElementById('markpopup');
 var closerMark = document.getElementById('markpopup-closer');
@@ -75,8 +112,16 @@ var expandedAttribution = new ol.control.Attribution({
 
 
 var map = new ol.Map({
-    controls: ol.control.defaults({attribution:false}).extend([
-        expandedAttribution,new ol.control.ScaleLine({}),new ol.control.LayerSwitcher({tipLabel: "Layers"})]),
+    controls: ol.control.defaults({
+         attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+            collapsible: false
+          })
+        }).extend([
+        expandedAttribution,
+        new ol.control.ScaleLine({}),
+        new ol.control.LayerSwitcher({tipLabel: "Layers"}), 
+        new app.CustomToolbarControl()
+        ]),
     target: document.getElementById('map'),
     renderer: 'canvas',
     overlays: [overlayPopup],
