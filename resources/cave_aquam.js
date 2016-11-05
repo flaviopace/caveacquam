@@ -67,8 +67,8 @@ app.CustomToolbarControl = function(opt_options) {
   
     var this_ = this;
     var handleRotateNorth = function(e) {
-        this_.getMap().getView().setZoom( 9);
-
+        this_.getMap().getView().setZoom(9);
+        this_.getMap().getView().fit([1639475.760638, 4851119.449981, 1948918.696787, 5032911.315568], this_.getMap().getSize());
     };
 
     button.addEventListener('click', handleRotateNorth, false);
