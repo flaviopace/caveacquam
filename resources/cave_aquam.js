@@ -353,7 +353,7 @@ var onSingleClick = function(evt) {
                     if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "inline label") {
                         popupField += '<th>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</th><td>';
                     } else {
-                        popupField += '<td bgcolor="#00FF00" colspan="2">' + prefix + ' di: ';
+                        popupField += '<td bgcolor="#99CCCCC" colspan="2">' + prefix + ' di: ';
                     }
                     if (layer.get('fieldLabels')[currentFeatureKeys[i]] == "header label") {
                         popupField += '<strong>' + layer.get('fieldAliases')[currentFeatureKeys[i]] + ':</strong><br />';
