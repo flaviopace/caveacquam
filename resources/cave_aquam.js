@@ -1,53 +1,54 @@
 /**
 var measuring = false;
-    measureControl = function(opt_options) {
+measureControl = function(opt_options) {
 
-    var options = opt_options || {};
+var options = opt_options || {};
 
-    var button = document.createElement('button');
-    button.innerHTML = '<img src="resources/measure-control.png" />';
-          
-    var this_ = this;
-    var handleMeasure = function(e) {
-    if (!measuring) {
-        this_.getMap().addInteraction(draw);
-        createHelpTooltip();
-        createMeasureTooltip();
-        measuring = true;
-    }
-    else {
-        this_.getMap().removeInteraction(draw);
-        measuring = false;
-        this_.getMap().removeOverlay(helpTooltip);
-        this_.getMap().removeOverlay(measureTooltip);
-    }
-    };
+var button = document.createElement('button');
+button.innerHTML = '<img src="resources/measure-control.png" />';
 
-      button.addEventListener('click', handleMeasure, false);
-      button.addEventListener('touchstart', handleMeasure, false);
+var this_ = this;
+var handleMeasure = function(e) {
+if (!measuring) {
+this_.getMap().addInteraction(draw);
+createHelpTooltip();
+createMeasureTooltip();
+measuring = true;
+}
+else {
+this_.getMap().removeInteraction(draw);
+measuring = false;
+this_.getMap().removeOverlay(helpTooltip);
+this_.getMap().removeOverlay(measureTooltip);
+}
+};
 
-      var element = document.createElement('div');
-      element.className = 'measure-control ol-unselectable ol-control';
-      element.appendChild(button);
+button.addEventListener('click', handleMeasure, false);
+button.addEventListener('touchstart', handleMeasure, false);
 
-      ol.control.Control.call(this, {
-        element: element,
-        target: options.target
-      });
+var element = document.createElement('div');
+element.className = 'measure-control ol-unselectable ol-control';
+element.appendChild(button);
 
-    };
+ol.control.Control.call(this, {
+element: element,
+target: options.target
+});
+
+};
 ol.inherits(measureControl, ol.control.Control);
 */
+
 /**
-       * Define a namespace for the application.
-       */
-      window.app = {};
-      var app = window.app;
+* Define a namespace for the application.
+*/
+window.app = {};
+var app = window.app;
 /**
- * @constructor
- * @extends {ol.control.Control}
- * @param {Object=} opt_options Control options.
- */
+* @constructor
+* @extends {ol.control.Control}
+* @param {Object=} opt_options Control options.
+*/
 app.CustomToolbarControl = function(opt_options) {
 
     var options = opt_options || {};
@@ -61,10 +62,10 @@ app.CustomToolbarControl = function(opt_options) {
     element.appendChild(button);
 
     ol.control.Control.call(this, {
-    element: element,
-    target: options.target
+        element: element,
+        target: options.target
     });
-  
+
     var this_ = this;
     var handleRotateNorth = function(e) {
         this_.getMap().getView().setZoom(9);
@@ -72,23 +73,44 @@ app.CustomToolbarControl = function(opt_options) {
     };
 
     button.addEventListener('click', handleRotateNorth, false);
-        
+
 };
 ol.inherits(app.CustomToolbarControl, ol.control.Control);
+
+/**
+* @constructor
+* @extends {ol.control.Control}
+* @param {Object=} opt_options Control options.
+*/
+app.divNotification = function(opt_options) {
+
+    var options = opt_options || {};
+
+    var div = document.createElement('div');
+    div.className = 'ol-unselectable ol-notification';
+    div.innerHTML = '';
+
+    ol.control.Control.call(this, {
+        element: div,
+        target: options.target
+    });
+
+};
+ol.inherits(app.divNotification, ol.control.Control);
 
 var containerMark = document.getElementById('markpopup');
 var closerMark = document.getElementById('markpopup-closer');
 var contentMark = document.getElementById('markpopup-content');
- 		  
+
 /**
 * Add a click handler to hide the popup.
 * @return {boolean} Don't follow the href.
 */
 closerMark.onclick = function() {
-   	window.overlayContentPopup.setPosition(undefined);
-   	window.containerMark.style.display = 'none';
-   	closerMark.blur();
-  	return false;
+    window.overlayContentPopup.setPosition(undefined);
+    window.containerMark.style.display = 'none';
+    closerMark.blur();
+    return false;
 };
 
 
@@ -113,15 +135,16 @@ var expandedAttribution = new ol.control.Attribution({
 
 var map = new ol.Map({
     controls: ol.control.defaults({
-         attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+        attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
             collapsible: false
-          })
-        }).extend([
+        })
+    }).extend([
         expandedAttribution,
         new ol.control.ScaleLine({}),
-        new ol.control.LayerSwitcher({tipLabel: "Layers"}), 
-        new app.CustomToolbarControl()
-        ]),
+        new ol.control.LayerSwitcher({tipLabel: "Layers"}),
+        new app.CustomToolbarControl(),
+        new app.divNotification()
+    ]),
     target: document.getElementById('map'),
     renderer: 'canvas',
     overlays: [overlayPopup],
@@ -133,11 +156,11 @@ var map = new ol.Map({
 map.getView().fit([1639475.760638, 4851119.449981, 1948918.696787, 5032911.315568], map.getSize());
 
 var overlayContentPopup = new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
-        element: window.containerMark,
-        autoPan: true,
-        autoPanAnimation: {
-          duration: 250
-        }
+    element: window.containerMark,
+    autoPan: true,
+    autoPanAnimation: {
+        duration: 250
+    }
 }));
 map.addOverlay(this.overlayContentPopup);
 
@@ -145,11 +168,11 @@ var NO_POPUP = 0
 var ALL_FIELDS = 1
 
 /**
- * Returns either NO_POPUP, ALL_FIELDS or the name of a single field to use for
- * a given layer
- * @param layerList {Array} List of ol.Layer instances
- * @param layer {ol.Layer} Layer to find field info about
- */
+* Returns either NO_POPUP, ALL_FIELDS or the name of a single field to use for
+* a given layer
+* @param layerList {Array} List of ol.Layer instances
+* @param layer {ol.Layer} Layer to find field info about
+*/
 function getPopupFields(layerList, layer) {
     // Determine the index that the layer will have in the popupLayers Array,
     // if the layersList contains more items than popupLayers then we need to
@@ -284,7 +307,7 @@ var onPointerMove = function(evt) {
         if (popupText) {
             overlayPopup.setPosition(coord);
             content.innerHTML = popupText;
-            container.style.display = 'block';        
+            container.style.display = 'block';
         } else {
             container.style.display = 'none';
             closer.blur();
@@ -292,11 +315,11 @@ var onPointerMove = function(evt) {
     }
 };
 
- var selectedTextStyleFunction = function(name) {
+var selectedTextStyleFunction = function(name) {
     return new ol.style.Style({
         text: new ol.style.Text({
             font: 'bold 36px helvetica,sans-serif',
-            text: 'Caricamento In Corso...',
+            //text: 'Caricamento In Corso...',
             textBaseline: 'bottom',
             textAlign: 'left',
             fill: new ol.style.Fill({
@@ -310,8 +333,6 @@ var onPointerMove = function(evt) {
     });
 };
 
-var oldStyle;   
-var lastFeature;     
 var onSingleClick = function(evt) {
     if (doHover) {
         return;
@@ -323,12 +344,12 @@ var onSingleClick = function(evt) {
     var currentFeature;
     var currentFeatureKeys;
     content.innerHTML = "";
+    var divNotification = document.getElementsByClassName('ol-unselectable ol-notification');
+    divNotification[0].innerHTML = "Caricamento dati...";
     map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-        lastFeature = currentFeature = feature;
+        currentFeature = feature;
         currentFeatureKeys = currentFeature.getKeys();
-        oldStyle = feature.getStyle();
-        feature.setStyle (selectedTextStyleFunction());
-        
+        //feature.setStyle (selectedTextStyleFunction());
         var doPopup = false;
         for (k in layer.get('fieldImages')) {
             if (layer.get('fieldImages')[k] != "Hidden") {
@@ -341,11 +362,11 @@ var onSingleClick = function(evt) {
             console.log(layer.A.name);
             if(layer.A.name == "style_centrielocalit")
             {
-            	prefix = "Località ";
+                prefix = "Località ";
             }
             else
             {
-            	prefix = "Comune ";
+                prefix = "Comune ";
             }
             for (var i=0; i<currentFeatureKeys.length; i++) {
                 if (currentFeatureKeys[i] != 'geometry') {
@@ -370,25 +391,25 @@ var onSingleClick = function(evt) {
         }
     });
 
-        overlayPopup.setPosition(coord);
-        content.innerHTML += popupText;
-        container.style.display = 'block';        
-    
-        var view = map.getView(); 
-        var viewResolution = /** @type {number} */ (view.getResolution());
-        var wmsSource = new ol.source.TileWMS({
-            url: 'http://lrssvt.ns0.it/cgi-bin/qgis_mapserv.fcgi?map=/Library/WebServer/Documents/caveaquam/caveaquam.qgs&',
-            params: {'LAYERS': 'eventi', 'FI_POINT_TOLERANCE':'25'},
-            serverType: 'qgis',
-            //crossOrigin: 'anonymous'
-        });
-    
-        var urlPoint = wmsSource.getGetFeatureInfoUrl(
-            evt.coordinate, viewResolution, 'EPSG:3857',
-            {'INFO_FORMAT': 'text/html'});
-        
+    overlayPopup.setPosition(coord);
+    content.innerHTML += popupText;
+    container.style.display = 'block';
+
+    var view = map.getView();
+    var viewResolution = /** @type {number} */ (view.getResolution());
+    var wmsSource = new ol.source.TileWMS({
+        url: 'http://lrssvt.ns0.it/cgi-bin/qgis_mapserv.fcgi?map=/Library/WebServer/Documents/caveaquam/caveaquam.qgs&',
+        params: {'LAYERS': 'eventi', 'FI_POINT_TOLERANCE':'25'},
+        serverType: 'qgis',
+        //crossOrigin: 'anonymous'
+    });
+
+    var urlPoint = wmsSource.getGetFeatureInfoUrl(
+        evt.coordinate, viewResolution, 'EPSG:3857',
+        {'INFO_FORMAT': 'text/html'});
+
         if (urlPoint) {
-        
+
             $.ajax({
                 type: "POST",
                 url: "./caveacquam.php",
@@ -398,8 +419,7 @@ var onSingleClick = function(evt) {
                 success: function (response) {
                     console.log('success');
                     var obj = response;
-                    //reset style
-                    lastFeature.setStyle(oldStyle);
+                    divNotification[0].innerHTML = "";
                     if (obj.hasOwnProperty('Descrizione'))
                     {
                         //console.log(obj.Descrizione);
@@ -410,29 +430,25 @@ var onSingleClick = function(evt) {
                                 tr += ("<tr>");
                                 tr +=("<td>" + key + "</td>");
                                 var dataCopy = obj[key]
-                                    for(value in dataCopy){
-                                        console.log(value );
-                                        if(key == "Foto")
-                                        {
-                                            var src = '<img src="'+value +'" alt="Smiley face" height="42" width="42">';
-                                            tr +=("<td>" + src + "</td>");
-                                        }
-                                        else
-                                        {
-                                            tr +=("<td>" + value + "</td>");
-                                        }
+                                for(value in dataCopy){
+                                    console.log(value );
+                                    if(key == "Foto")
+                                    {
+                                        var src = '<img src="'+value +'" alt="Smiley face" height="42" width="42">';
+                                        tr +=("<td>" + src + "</td>");
                                     }
+                                    else
+                                    {
+                                        tr +=("<td>" + value + "</td>");
+                                    }
+                                }
                             }
                             tr += ("</tr>");
                         }
-                        
+
                         tr += '</table>';
                         $("#markpopup-content").html(tr);
-                        
 
-                        /*document.getElementById('markpopup-content').innerHTML =
-                            '<iframe id="frameID" src="' + urlPoint + '"></iframe>';  
-                            */
                         var coordinate = evt.coordinate;
                         window.overlayContentPopup.setPosition(coordinate);
                         window.containerMark.style.display = 'block';
@@ -446,50 +462,50 @@ var onSingleClick = function(evt) {
                     console.log('Exception:'+data.responseText);
                 }
             });
-            
-        }
-        
-};
 
-/**
+        }
+
+    };
+
+    /**
     map.on('pointermove', function(evt) {
-        if (evt.dragging) {
-            return;
-        }
-        if (measuring) {
-            
-            var helpMsg = 'Click to start drawing';
-            if (sketch) {
-                var geom = (sketch.getGeometry());
-                if (geom instanceof ol.geom.Polygon) {
-                    helpMsg = continuePolygonMsg;
-                } else if (geom instanceof ol.geom.LineString) {
-                    helpMsg = continueLineMsg;
-                }
-            }
-            helpTooltipElement.innerHTML = helpMsg;
-            helpTooltip.setPosition(evt.coordinate);
-        }
-    });
-*/    
+    if (evt.dragging) {
+    return;
+}
+if (measuring) {
+
+var helpMsg = 'Click to start drawing';
+if (sketch) {
+var geom = (sketch.getGeometry());
+if (geom instanceof ol.geom.Polygon) {
+helpMsg = continuePolygonMsg;
+} else if (geom instanceof ol.geom.LineString) {
+helpMsg = continueLineMsg;
+}
+}
+helpTooltipElement.innerHTML = helpMsg;
+helpTooltip.setPosition(evt.coordinate);
+}
+});
+*/
 
 //Add search button
 var geocoder = new Geocoder('nominatim', {
-  provider: 'photon',
-  lang: 'en-US', 
-  placeholder: 'Cerca ...',
-  limit: 5,
-  keepOpen: true
+    provider: 'photon',
+    lang: 'en-US',
+    placeholder: 'Cerca ...',
+    limit: 5,
+    keepOpen: true
 });
 map.addControl(geocoder);
 
 geocoder.on('addresschosen', function(evt){
-  var feature = evt.feature,
-      coord = evt.coordinate,
-      address = evt.address;
+    var feature = evt.feature,
+    coord = evt.coordinate,
+    address = evt.address;
 
-  content.innerHTML = '<p>'+ address.formatted +'</p>';
-  overlay.setPosition(coord);
+    content.innerHTML = '<p>'+ address.formatted +'</p>';
+    overlay.setPosition(coord);
 });
 
 map.on('pointermove', function(evt) {
@@ -500,44 +516,44 @@ map.on('singleclick', function(evt) {
 });
 
 /**
- * Currently drawn feature.
- * @type {ol.Feature}
- */
+* Currently drawn feature.
+* @type {ol.Feature}
+*/
 var sketch;
 
 
 /**
- * The help tooltip element.
- * @type {Element}
- */
+* The help tooltip element.
+* @type {Element}
+*/
 var helpTooltipElement;
 
 
 /**
- * Overlay to show the help messages.
- * @type {ol.Overlay}
- */
+* Overlay to show the help messages.
+* @type {ol.Overlay}
+*/
 var helpTooltip;
 
 
 /**
- * The measure tooltip element.
- * @type {Element}
- */
+* The measure tooltip element.
+* @type {Element}
+*/
 var measureTooltipElement;
 
 
 /**
- * Overlay to show the measurement.
- * @type {ol.Overlay}
- */
+* Overlay to show the measurement.
+* @type {ol.Overlay}
+*/
 var measureTooltip;
 
 
 /**
- * Message to show when the user is drawing a line.
- * @type {string}
- */
+* Message to show when the user is drawing a line.
+* @type {string}
+*/
 var continueLineMsg = 'Click to continue drawing the line';
 
 
@@ -570,34 +586,34 @@ map.addLayer(measureLayer);
 
 var draw; // global so we can remove it later
 function addInteraction() {
-  var type = 'LineString';
-  draw = new ol.interaction.Draw({
-    source: source,
-    type: /** @type {ol.geom.GeometryType} */ (type),
-    style: new ol.style.Style({
-      fill: new ol.style.Fill({
-        color: 'rgba(255, 255, 255, 0.2)'
-      }),
-      stroke: new ol.style.Stroke({
-        color: 'rgba(0, 0, 0, 0.5)',
-        lineDash: [10, 10],
-        width: 2
-      }),
-      image: new ol.style.Circle({
-        radius: 5,
-        stroke: new ol.style.Stroke({
-          color: 'rgba(0, 0, 0, 0.7)'
-        }),
-        fill: new ol.style.Fill({
-          color: 'rgba(255, 255, 255, 0.2)'
+    var type = 'LineString';
+    draw = new ol.interaction.Draw({
+        source: source,
+        type: /** @type {ol.geom.GeometryType} */ (type),
+        style: new ol.style.Style({
+            fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.2)'
+            }),
+            stroke: new ol.style.Stroke({
+                color: 'rgba(0, 0, 0, 0.5)',
+                lineDash: [10, 10],
+                width: 2
+            }),
+            image: new ol.style.Circle({
+                radius: 5,
+                stroke: new ol.style.Stroke({
+                    color: 'rgba(0, 0, 0, 0.7)'
+                }),
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 255, 255, 0.2)'
+                })
+            })
         })
-      })
-    })
-  });
+    });
 
-  var listener;
-  draw.on('drawstart',
-      function(evt) {
+    var listener;
+    draw.on('drawstart',
+    function(evt) {
         // set sketch
         sketch = evt.feature;
 
@@ -605,17 +621,17 @@ function addInteraction() {
         var tooltipCoord = evt.coordinate;
 
         listener = sketch.getGeometry().on('change', function(evt) {
-          var geom = evt.target;
-          var output;
+            var geom = evt.target;
+            var output;
             output = formatLength( /** @type {ol.geom.LineString} */ (geom));
             tooltipCoord = geom.getLastCoordinate();
-          measureTooltipElement.innerHTML = output;
-          measureTooltip.setPosition(tooltipCoord);
+            measureTooltipElement.innerHTML = output;
+            measureTooltip.setPosition(tooltipCoord);
         });
-      }, this);
+    }, this);
 
-  draw.on('drawend',
-      function(evt) {
+    draw.on('drawend',
+    function(evt) {
         measureTooltipElement.className = 'tooltip tooltip-static';
         measureTooltip.setOffset([0, -7]);
         // unset sketch
@@ -624,65 +640,65 @@ function addInteraction() {
         measureTooltipElement = null;
         createMeasureTooltip();
         ol.Observable.unByKey(listener);
-      }, this);
+    }, this);
 }
 
 
 /**
- * Creates a new help tooltip
- */
+* Creates a new help tooltip
+*/
 function createHelpTooltip() {
-  if (helpTooltipElement) {
-    helpTooltipElement.parentNode.removeChild(helpTooltipElement);
-  }
-  helpTooltipElement = document.createElement('div');
-  helpTooltipElement.className = 'tooltip hidden';
-  helpTooltip = new ol.Overlay({
-    element: helpTooltipElement,
-    offset: [15, 0],
-    positioning: 'center-left'
-  });
-  map.addOverlay(helpTooltip);
+    if (helpTooltipElement) {
+        helpTooltipElement.parentNode.removeChild(helpTooltipElement);
+    }
+    helpTooltipElement = document.createElement('div');
+    helpTooltipElement.className = 'tooltip hidden';
+    helpTooltip = new ol.Overlay({
+        element: helpTooltipElement,
+        offset: [15, 0],
+        positioning: 'center-left'
+    });
+    map.addOverlay(helpTooltip);
 }
 
 
 /**
- * Creates a new measure tooltip
- */
+* Creates a new measure tooltip
+*/
 function createMeasureTooltip() {
-  if (measureTooltipElement) {
-    measureTooltipElement.parentNode.removeChild(measureTooltipElement);
-  }
-  measureTooltipElement = document.createElement('div');
-  measureTooltipElement.className = 'tooltip tooltip-measure';
-  measureTooltip = new ol.Overlay({
-    element: measureTooltipElement,
-    offset: [0, -15],
-    positioning: 'bottom-center'
-  });
-  map.addOverlay(measureTooltip);
+    if (measureTooltipElement) {
+        measureTooltipElement.parentNode.removeChild(measureTooltipElement);
+    }
+    measureTooltipElement = document.createElement('div');
+    measureTooltipElement.className = 'tooltip tooltip-measure';
+    measureTooltip = new ol.Overlay({
+        element: measureTooltipElement,
+        offset: [0, -15],
+        positioning: 'bottom-center'
+    });
+    map.addOverlay(measureTooltip);
 }
 
 
 var wgs84Sphere = new ol.Sphere(6378137);
 
 /**
- * format length output
- * @param {ol.geom.LineString} line
- * @return {string}
- */
+* format length output
+* @param {ol.geom.LineString} line
+* @return {string}
+*/
 var formatLength = function(line) {
-  var length;
+    var length;
     length = Math.round(line.getLength() * 100) / 100;
-  var output;
-  if (length > 100) {
-    output = (Math.round(length / 1000 * 100) / 100) +
+    var output;
+    if (length > 100) {
+        output = (Math.round(length / 1000 * 100) / 100) +
         ' ' + 'km';
-  } else {
-    output = (Math.round(length * 100) / 100) +
+    } else {
+        output = (Math.round(length * 100) / 100) +
         ' ' + 'm';
-  }
-  return output;
+    }
+    return output;
 };
 
 addInteraction();
