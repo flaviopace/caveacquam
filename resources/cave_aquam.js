@@ -359,8 +359,8 @@ var onSingleClick = function(evt) {
         if (doPopup) {
             var prefix = '';
             popupText += '<table>';
-            console.log(layer.A.name);
-            if(layer.A.name == "style_centrielocalit")
+            console.log(layer.get('name'));
+            if(layer.get('name') == "centri_localita")
             {
                 prefix = "Località ";
             }
