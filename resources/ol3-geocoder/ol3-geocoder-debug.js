@@ -996,6 +996,8 @@
 
 	  var ul = this.els.result_container;
 	  response.forEach(function (row) {
+		  if(row.address.state == "Basilicata")
+		  {
 	    var address_html = this$1.addressTemplate(row.address),
 	        html = '<a href="#">' + address_html + '</a>',
 	        li = utils.createElement('li', html);
@@ -1006,7 +1008,9 @@
 	    }, false);
 
 	    ul.appendChild(li);
+	}
 	  });
+
 	};
 
 	Nominatim.prototype.chosen = function chosen (place, address_html, address_obj, address_original) {
