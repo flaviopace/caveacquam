@@ -504,8 +504,8 @@ geocoder.on('addresschosen', function(evt){
     coord = evt.coordinate,
     address = evt.address;
 
-    content.innerHTML = '<p>'+ address.formatted +'</p>';
-    overlay.setPosition(coord);
+    //content.innerHTML = '<p>'+ address.formatted +'</p>';
+    //overlay.setPosition(coord);
 });
 
 map.on('pointermove', function(evt) {
