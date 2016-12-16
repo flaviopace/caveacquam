@@ -56,7 +56,6 @@ app.CustomToolbarControl = function(opt_options) {
     var button = document.createElement('button');
     button.innerHTML = 'Auto-Zoom';
 
-
     var element = document.createElement('div');
     element.className = 'ol-unselectable ol-mycontrol';
     element.appendChild(button);
@@ -97,6 +96,40 @@ app.divNotification = function(opt_options) {
 
 };
 ol.inherits(app.divNotification, ol.control.Control);
+
+/**
+* @constructor
+* @extends {ol.control.Control}
+* @param {Object=} opt_options Control options.
+*/
+app.TrackMeControl = function(opt_options) {
+
+    var options = opt_options || {};
+
+    var button = document.createElement('button');
+    button.innerHTML = 'N';
+
+    var geolocation = new ol.Geolocation({
+        projection: view.getProjection()
+    });
+
+    button.addEventListener('click', function() {
+        geolocation.setTracking(true);
+    });
+
+    // handle geolocation error.
+
+    var element = document.createElement('div');
+    element.className = 'trackme ol-unselectable ol-control';
+    element.appendChild(button);
+
+    ol.control.Control.call(this, {
+      element: element,
+      target: options.target
+    });
+
+};
+ol.inherits(app.TrackMeControl, ol.control.Control);
 
 var containerMark = document.getElementById('markpopup');
 var closerMark = document.getElementById('markpopup-closer');
@@ -143,7 +176,8 @@ var map = new ol.Map({
         new ol.control.ScaleLine({}),
         new ol.control.LayerSwitcher({tipLabel: "Layers"}),
         new app.CustomToolbarControl(),
-        new app.divNotification()
+        new app.divNotification(),
+        new app.TrackMeControl()
     ]),
     target: document.getElementById('map'),
     renderer: 'canvas',
