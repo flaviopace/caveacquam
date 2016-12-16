@@ -109,10 +109,6 @@ app.TrackMeControl = function(opt_options) {
     var button = document.createElement('button');
     button.innerHTML = 'N';
 
-    var geolocation = new ol.Geolocation({
-        projection: view.getProjection()
-    });
-
     button.addEventListener('click', function() {
         geolocation.setTracking(true);
     });
@@ -200,6 +196,10 @@ map.addOverlay(this.overlayContentPopup);
 
 var NO_POPUP = 0
 var ALL_FIELDS = 1
+
+var geolocation = new ol.Geolocation({
+    projection: map.getView().getProjection()
+});
 
 /**
 * Returns either NO_POPUP, ALL_FIELDS or the name of a single field to use for
