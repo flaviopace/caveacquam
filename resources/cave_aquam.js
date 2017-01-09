@@ -161,6 +161,11 @@ var expandedAttribution = new ol.control.Attribution({
     collapsible: false
 });
 
+//This check is used to understand if we are on smartphone or not
+var defaultMinZoom = 9;
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    defaultMinZoom = 8;
+}
 
 var map = new ol.Map({
     controls: ol.control.defaults({
@@ -180,7 +185,7 @@ var map = new ol.Map({
     overlays: [overlayPopup],
     layers: layersList,
     view: new ol.View({
-        extent: [1639475.760638, 4851119.449981, 1948918.696787, 5032911.315568], maxZoom: 28, minZoom: 9
+        extent: [1639475.760638, 4851119.449981, 1948918.696787, 5032911.315568], maxZoom: 28, minZoom: defaultMinZoom
     })
 });
 map.getView().fit([1639475.760638, 4851119.449981, 1948918.696787, 5032911.315568], map.getSize());
