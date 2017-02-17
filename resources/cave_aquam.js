@@ -107,7 +107,7 @@ app.TrackMeControl = function(opt_options) {
     var options = opt_options || {};
 
     var button = document.createElement('button');
-    button.innerHTML = 'N';
+    button.innerHTML = '<img class= "gpsicon" src="resources/location.png" />';
 
     button.addEventListener('click', function() {
         geolocation.setTracking(true);
