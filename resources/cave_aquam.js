@@ -56,7 +56,6 @@ app.CustomToolbarControl = function(opt_options) {
     var button = document.createElement('button');
     button.innerHTML = 'Auto-Zoom';
 
-
     var element = document.createElement('div');
     element.className = 'ol-unselectable ol-mycontrol';
     element.appendChild(button);
@@ -97,6 +96,36 @@ app.divNotification = function(opt_options) {
 
 };
 ol.inherits(app.divNotification, ol.control.Control);
+
+/**
+* @constructor
+* @extends {ol.control.Control}
+* @param {Object=} opt_options Control options.
+*/
+app.TrackMeControl = function(opt_options) {
+
+    var options = opt_options || {};
+
+    var button = document.createElement('button');
+    button.innerHTML = '<img class= "gpsicon" src="resources/location.png" />';
+
+    button.addEventListener('click', function() {
+        geolocation.setTracking(true);
+    });
+
+    // handle geolocation error.
+
+    var element = document.createElement('div');
+    element.className = 'trackme ol-unselectable ol-control';
+    element.appendChild(button);
+
+    ol.control.Control.call(this, {
+      element: element,
+      target: options.target
+    });
+
+};
+ol.inherits(app.TrackMeControl, ol.control.Control);
 
 var containerMark = document.getElementById('markpopup');
 var closerMark = document.getElementById('markpopup-closer');
@@ -148,7 +177,8 @@ var map = new ol.Map({
         new ol.control.ScaleLine({}),
         new ol.control.LayerSwitcher({tipLabel: "Layers"}),
         new app.CustomToolbarControl(),
-        new app.divNotification()
+        new app.divNotification(),
+        new app.TrackMeControl()
     ]),
     target: document.getElementById('map'),
     renderer: 'canvas',
@@ -171,6 +201,10 @@ map.addOverlay(this.overlayContentPopup);
 
 var NO_POPUP = 0
 var ALL_FIELDS = 1
+
+var geolocation = new ol.Geolocation({
+    projection: map.getView().getProjection()
+});
 
 /**
 * Returns either NO_POPUP, ALL_FIELDS or the name of a single field to use for
@@ -364,8 +398,8 @@ var onSingleClick = function(evt) {
         if (doPopup) {
             var prefix = '';
             popupText += '<table>';
-            console.log(layer.A.name);
-            if(layer.A.name == "style_centrielocalit")
+            console.log(layer.get('name'));
+            if(layer.get('name') == "centri_localita")
             {
                 prefix = "Località ";
             }
@@ -518,6 +552,39 @@ map.on('pointermove', function(evt) {
 });
 map.on('singleclick', function(evt) {
     onSingleClick(evt);
+});
+
+var accuracyFeature = new ol.Feature();
+geolocation.on('change:accuracyGeometry', function() {
+    accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
+});
+
+var positionFeature = new ol.Feature();
+    positionFeature.setStyle(new ol.style.Style({
+    image: new ol.style.Circle({
+      radius: 6,
+      fill: new ol.style.Fill({
+        color: '#3399CC'
+      }),
+      stroke: new ol.style.Stroke({
+        color: '#fff',
+        width: 2
+      })
+    })
+}));
+
+geolocation.on('change:position', function() {
+    var coordinates = geolocation.getPosition();
+    map.getView().setCenter(coordinates);
+    positionFeature.setGeometry(coordinates ?
+        new ol.geom.Point(coordinates) : null);
+});
+
+new ol.layer.Vector({
+    map: map,
+    source: new ol.source.Vector({
+      features: [accuracyFeature, positionFeature]
+    })
 });
 
 /**
